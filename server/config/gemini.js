@@ -12,7 +12,7 @@ const getGeminiClient = () => {
     return genAI;
 };
 
-const getModel = (modelName = 'gemini-2.0-flash') => {
+const getModel = (modelName = 'gemini-1.5-flash') => {
     const client = getGeminiClient();
     return client.getGenerativeModel({ model: modelName });
 };
