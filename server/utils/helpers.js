@@ -10,7 +10,8 @@ const generateAccessToken = (userId, email) => {
 
 // Generate JWT refresh token
 const generateRefreshToken = (userId) => {
-    return jwt.sign({ id: userId }, process.env.JWT_REFRESH_SECRET, {
+    const secret = process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET + '-refresh';
+    return jwt.sign({ id: userId }, secret, {
         expiresIn: process.env.JWT_REFRESH_EXPIRE || '30d',
     });
 };

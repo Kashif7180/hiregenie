@@ -136,7 +136,7 @@ const refreshAccessToken = async (req, res) => {
     }
 
     try {
-        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET + '-refresh');
         const user = await User.findById(decoded.id);
         if (!user) {
             throw new AppError('User no longer exists', 401);
