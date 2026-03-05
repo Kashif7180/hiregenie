@@ -14,7 +14,14 @@ const getGeminiClient = () => {
 
 const getModel = (modelName = 'gemini-2.5-flash') => {
     const client = getGeminiClient();
-    return client.getGenerativeModel({ model: modelName });
+    return client.getGenerativeModel({
+        model: modelName,
+        generationConfig: {
+            temperature: 0, // 0 means deterministic (same response for same input)
+            topK: 1,
+            topP: 0.1
+        }
+    });
 };
 
 module.exports = { getGeminiClient, getModel };
