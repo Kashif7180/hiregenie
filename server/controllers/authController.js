@@ -7,6 +7,7 @@ const {
 } = require('../utils/helpers');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const sendEmail = require('../utils/sendEmail');
 
 // ==========================================
 // @desc    Register a new user
@@ -176,11 +177,35 @@ const forgotPassword = async (req, res) => {
 
     const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
-    res.status(200).json({
-        success: true,
-        message: 'Password reset link generated!',
-        ...(process.env.NODE_ENV === 'development' && { resetUrl, resetToken }),
-    });
+    const message = `
+        <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+            <h2>Password Reset</h2>
+            <p>You requested a password reset. Please click the link below to reset your password:</p>
+            <a href="${resetUrl}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
+            <p>If you didn't request this, you can safely ignore this email.</p>
+        </div>
+    `;
+
+    try {
+        await sendEmail({
+            email: user.email,
+            subject: 'Password Reset Form - HireGenie',
+            html: message,
+        });
+
+        res.status(200).json({
+            success: true,
+            message: 'Password reset link sent to email!',
+            ...(process.env.NODE_ENV === 'development' && { resetUrl, resetToken }),
+        });
+    } catch (error) {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        await user.save({ validateBeforeSave: false });
+
+        console.error('Email sending error:', error);
+        throw new AppError('Email could not be sent. Please make sure your .env has valid SMTP credentials.', 500);
+    }
 };
 
 // ==========================================

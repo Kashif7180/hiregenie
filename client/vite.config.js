@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    host: true, // This enables binding to all local interfaces including 127.0.0.1 and your local IP
     proxy: {
       '/api': {
         target: 'http://localhost:5000',

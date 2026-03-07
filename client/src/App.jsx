@@ -11,6 +11,7 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import ResumeUpload from './pages/ResumeUpload';
 import InterviewPage from './pages/Interview';
@@ -62,6 +63,14 @@ function AppContent() {
               element={
                 <GuestRoute>
                   <ForgotPassword />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="/reset-password/:token"
+              element={
+                <GuestRoute>
+                  <ResetPassword />
                 </GuestRoute>
               }
             />
